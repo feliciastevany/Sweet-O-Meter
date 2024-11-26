@@ -112,7 +112,7 @@ struct ContentView: View {
                                                 RoundedRectangle(cornerRadius: 4)
                                                     .fill(Color.red) // Red color for the exceeded portion
                                                     .frame(height: exceededHeight * 1.5) // Scale the exceeded portion
-                                                    .offset(y: -min(scaledBarHeight, maxHeight)) // Offset the red portion to start above the pink bar
+
                                             }
                                         }
                                         .frame(width: 30) // Set fixed width for each bar
@@ -190,26 +190,6 @@ struct ContentView: View {
                 .padding(.top, -20) // Remove space after header
             }
             
-            .overlay(
-               // Floating Add Button
-               Button(action: addRandomEntry) {
-                   ZStack {
-                       Circle()
-                           .fill(Color(hex: "#ff66c4"))
-                           .frame(width: 64, height: 64)
-                           .shadow(color: .gray.opacity(0.3), radius: 6)
-                       
-                       Image(systemName: "plus")
-                           .font(.title)
-                           .foregroundColor(.white)
-                   }
-               }
-               
-               
-               .padding(.bottom, 48) // Halfway touching the navbar
-               .padding(.leading, (UIScreen.main.bounds.width - 400) / 2) // Center horizontally
-               , alignment: .bottom
-           )
             // Fixed Bottom Navbar
             VStack {
                 Spacer()
@@ -240,6 +220,26 @@ struct ContentView: View {
                 .padding(.horizontal)
                 .frame(height: 80)
             }
+            .overlay(
+               // Floating Add Button
+               Button(action: addRandomEntry) {
+                   ZStack {
+                       Circle()
+                           .fill(Color(hex: "#ff66c4"))
+                           .frame(width: 64, height: 64)
+                           .shadow(color: .gray.opacity(0.3), radius: 6)
+                       
+                       Image(systemName: "plus")
+                           .font(.title)
+                           .foregroundColor(.white)
+                   }
+               }
+               
+               
+               .padding(.bottom, 35) // Halfway touching the navbar
+               .padding(.leading, (UIScreen.main.bounds.width - 400) / 2) // Center horizontally
+               , alignment: .bottom
+           )
         }
         .edgesIgnoringSafeArea(.bottom) // To ensure the navbar goes all the way to the edge
     }
