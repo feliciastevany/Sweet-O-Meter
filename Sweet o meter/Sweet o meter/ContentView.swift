@@ -78,60 +78,75 @@ struct ContentView: View {
                             .shadow(color: Color(hex: "#ffc1e3").opacity(0.5), radius: 4)
                         }
                         .padding(.horizontal)
-
                         
                         // Weekly Intake Bar Chart
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Weekly Intake")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color(hex: "#ff66c4"))
+                            // Header for Weekly Intake
+                            HStack {
+                                Spacer().frame(width: 16) // Adds spacing to the left
+                                Text("Weekly Intake")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color(hex: "#ff66c4"))
+                                Spacer() // Keeps text flexible to fit with overall layout
+                            }
 
-                            HStack(spacing: 12) {
-                                ForEach(weeklyIntake.indices, id: \.self) { index in
-                                    VStack {
-                                        // Bar chart with a consistent base for alignment
-                                        ZStack(alignment: .bottom) {
-                                            // Background bar (always starts at 0, this is the 'baseline' for all bars)
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color.gray.opacity(0.2)) // The grey bar that fills up to maxHeight
-                                            
-                                            // Calculate the scaled height for visual representation
-                                            let scaledBarHeight = CGFloat(weeklyIntake[index]) * 1.5
-
-                                            // Calculate the exceeded height (only if the intake exceeds maxHeight)
-                                            let exceededHeight = CGFloat(weeklyIntake[index]) > maxHeight ? CGFloat(weeklyIntake[index]) - maxHeight : 0
-
-                                            // Base bar (pink), capped at maxHeight (to show the intake)
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color(hex: "#ff66c4")) // Pink color for the base
-                                                .frame(height: min(scaledBarHeight, maxHeight)) // Capped at maxHeight
-
-                                            // Exceeded portion (red) only if the intake exceeds maxHeight
-                                            if exceededHeight > 0 {
+                            // Bar Chart Section
+                            ZStack {
+                                // Bar Chart
+                                HStack(spacing: 12) {
+                                    ForEach(weeklyIntake.indices, id: \.self) { index in
+                                        VStack {
+                                            // Bar chart with a consistent base for alignment
+                                            ZStack(alignment: .bottom) {
+                                                // Background bar (always starts at 0, this is the 'baseline' for all bars)
                                                 RoundedRectangle(cornerRadius: 4)
-                                                    .fill(Color.red) // Red color for the exceeded portion
-                                                    .frame(height: exceededHeight * 1.5) // Scale the exceeded portion
+                                                    .fill(Color.gray.opacity(0.2)) // The grey bar that fills up to maxHeight
+                                                    .frame(height: maxHeight)
 
+                                                // Calculate the scaled height for visual representation
+                                                let scaledBarHeight = CGFloat(weeklyIntake[index]) * 1.5
+
+                                                // Base bar (pink), capped at maxHeight (to show the intake)
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Color(hex: "#ff66c4")) // Pink color for the base
+                                                    .frame(height: min(scaledBarHeight, maxHeight)) // Capped at maxHeight
                                             }
-                                        }
-                                        .frame(width: 30) // Set fixed width for each bar
-                                        .padding(.bottom, 4) // Slight padding at the bottom for spacing
+                                            .frame(width: 30) // Set fixed width for each bar
+                                            .padding(.bottom, 4) // Slight padding at the bottom for spacing
 
-                                        // Day label
-                                        Text(dayLabels[index])
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                            // Day label
+                                            Text(dayLabels[index])
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
                                     }
                                 }
+
+                                // Maximum Indicator Line
+                                VStack {
+                                    Spacer()
+
+                                    Rectangle()
+                                        .fill(Color.red)
+                                        .frame(height: 2) // Thickness of the line
+                                        .offset(y: -maxHeight) // Position at the top of the bar chart
+                                        .overlay(
+                                            Text("50 g")
+                                                .font(.caption)
+                                                .foregroundColor(Color.red)
+                                                .offset(y: -8), alignment: .leading
+                                        )
+                                }
+                                .zIndex(1) // Ensures the red line is on top of all bars
                             }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(16)
+                            .shadow(color: Color(hex: "#ffc1e3").opacity(0.5), radius: 4)
+                            .padding(.horizontal)
                         }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(16)
-                        .shadow(color: Color(hex: "#ffc1e3").opacity(0.5), radius: 4)
-                        .padding(.horizontal)
-                        
+
                         // Today Entries Section with Food Suggestions
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Today Entries")
