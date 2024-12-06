@@ -65,6 +65,7 @@ struct InputPage: View {
                                         sugarWeightchoose = value
                                     }
                                 }
+                            
                         }
                     }
                     
