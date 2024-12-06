@@ -10,9 +10,10 @@ import SwiftUI
 struct InputPage: View {
     @State private var productName: String = ""
     @State private var sugarWeight: String = ""
-    @State private var sugarWeightchoose: String = "0 g"
-    let sugarOptions = ["0 g", "5 g", "10 g", "15 g", "20 g"]
-    @State private var isPickerActive: Bool = false
+    @State private var sugarWeightchoose: Double = 0.0
+    let sugarRange: ClosedRange<Double> = 0.0...100.0
+    let sugarStep: Double = 1.0
+    @State private var isSliderActive: Bool = false
 
     var body: some View {
         VStack {
@@ -42,23 +43,28 @@ struct InputPage: View {
                         Text("Add Sugar Weight")
                             .font(.headline)
                         
-                        Toggle("Use Picker", isOn: $isPickerActive)
+                        Toggle("Use Slider", isOn: $isSliderActive)
                             .padding()
                         
-                        if isPickerActive {
-                            Picker("Select your sugar weight", selection: $sugarWeightchoose) {
-                                ForEach(sugarOptions, id: \.self) {
-                                    sugarWeight in Text(sugarWeight).tag(sugarWeight)
-                                }
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                            .onChange(of: sugarWeightchoose) { newValue in
-                                sugarWeight = String(newValue.dropLast().trimmingCharacters(in: .whitespaces))
-                            }
-                            //.padding(.bottom, 70)
+                        if isSliderActive {
+                            Slider(
+                                value: $sugarWeightchoose,
+                                in: sugarRange,
+                                step: sugarStep
+                            )
+                            .padding()
+                            Text("Selected sugar weight: \(String(format: "%.1f", sugarWeightchoose)) g")
+                                .padding()
+
                         } else {
                             TextField("Enter your sugar weight", text: $sugarWeight)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.decimalPad)
+                                .onChange(of: sugarWeight) { newValue in
+                                    if let value = Double(newValue) {
+                                        sugarWeightchoose = value
+                                    }
+                                }
                         }
                     }
                     
